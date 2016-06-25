@@ -31,5 +31,20 @@ class AppDelegate
   def locationManager(manager, didUpdateLocations: locations)
     @current_location = locations.first
     NSLog "CURRENT LOCATION: #{@current_location.coordinate.latitude},#{@current_location.coordinate.longitude}"
+
+    @mainWindow.contentView = self.map_for_point(@current_location.coordinate)
+  end
+
+  def map_for_point(coordinate)
+    @map_view ||= MKMapView.alloc.initWithFrame(@mainWindow.frame)
+
+    @map_view.setRegion(MKCoordinateRegionMakeWithDistance(coordinate, 1000, 1000), animated: true)
+
+    @pin ||= MKPointAnnotation.alloc.init
+    @pin.coordinate = coordinate
+    @pin.title = "You"
+    @map_view.addAnnotation(@pin)
+
+    @map_view
   end
 end
